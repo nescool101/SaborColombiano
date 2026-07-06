@@ -87,10 +87,10 @@ namespace SaborColombiano.Menu
         private readonly List<Recipe> activeMenu = new List<Recipe>();
 
         /// <summary>
-        /// Popularity tracker -- maps recipe instance ID to order count.
+        /// Popularity tracker -- maps recipe name to order count.
         /// Persisted through <c>SaborColombiano.Data.SaveManager</c>.
         /// </summary>
-        private readonly Dictionary<int, int> popularityMap = new Dictionary<int, int>();
+        private readonly Dictionary<string, int> popularityMap = new Dictionary<string, int>();
 
         /// <summary>Current daily special, or <c>null</c> if none is set.</summary>
         private Recipe dailySpecial;
@@ -178,6 +178,32 @@ namespace SaborColombiano.Menu
             return recipe != null && unlockedRecipes.Contains(recipe);
         }
 
+        /// <summary>
+        /// Unlocks a recipe by its string ID from the
+        /// <see cref="SaborColombiano.Data.ColombianRecipeDatabase"/>.
+        /// Looks up the Recipe ScriptableObject by name; logs a warning if
+        /// no matching asset is loaded.
+        /// </summary>
+        /// <param name="recipeId">Database recipe ID.</param>
+        /// <returns><c>true</c> if a matching recipe was found and newly unlocked.</returns>
+        public bool UnlockRecipeById(string recipeId)
+        {
+            if (string.IsNullOrEmpty(recipeId))
+                return false;
+
+            Recipe recipe = FindRecipeAssetById(recipeId);
+            if (recipe != null)
+            {
+                return UnlockRecipe(recipe);
+            }
+
+            // No ScriptableObject found -- still track the ID so it can be
+            // resolved later when Recipe assets are loaded.
+            Debug.LogWarning($"[MenuSystem] No Recipe asset found for ID '{recipeId}'. " +
+                             "The unlock will be tracked by ID for later resolution.");
+            return false;
+        }
+
         // ================================================================== //
         //  Active Menu Management
         // ================================================================== //
@@ -252,6 +278,29 @@ namespace SaborColombiano.Menu
         }
 
         /// <summary>
+        /// Adds a recipe to the active menu by its string ID from the
+        /// <see cref="SaborColombiano.Data.ColombianRecipeDatabase"/>.
+        /// The recipe must already be unlocked.
+        /// </summary>
+        /// <param name="recipeId">Database recipe ID.</param>
+        /// <returns><c>true</c> if a matching recipe was found and added.</returns>
+        public bool AddToMenuById(string recipeId)
+        {
+            if (string.IsNullOrEmpty(recipeId))
+                return false;
+
+            Recipe recipe = FindRecipeAssetById(recipeId);
+            if (recipe != null)
+            {
+                return AddToMenu(recipe);
+            }
+
+            Debug.LogWarning($"[MenuSystem] No Recipe asset found for ID '{recipeId}'. " +
+                             "Cannot add to active menu.");
+            return false;
+        }
+
+        /// <summary>
         /// Returns <c>true</c> if the recipe is currently on the active menu.
         /// </summary>
         /// <param name="recipe">Recipe to check.</param>
@@ -283,14 +332,14 @@ namespace SaborColombiano.Menu
         {
             if (recipe == null) return;
 
-            int id = recipe.GetInstanceID();
-            if (popularityMap.ContainsKey(id))
+            string key = recipe.RecipeName;
+            if (popularityMap.ContainsKey(key))
             {
-                popularityMap[id]++;
+                popularityMap[key]++;
             }
             else
             {
-                popularityMap[id] = 1;
+                popularityMap[key] = 1;
             }
         }
 
@@ -302,7 +351,7 @@ namespace SaborColombiano.Menu
         public int GetPopularity(Recipe recipe)
         {
             if (recipe == null) return 0;
-            popularityMap.TryGetValue(recipe.GetInstanceID(), out int count);
+            popularityMap.TryGetValue(recipe.RecipeName, out int count);
             return count;
         }
 
@@ -478,6 +527,33 @@ namespace SaborColombiano.Menu
             }
 
             return availableStations != null && availableStations.Contains(recipe.RequiredEquipment);
+        }
+
+        // ================================================================== //
+        //  Internal helpers
+        // ================================================================== //
+
+        /// <summary>
+        /// Attempts to find a loaded <see cref="Recipe"/> ScriptableObject asset
+        /// whose <c>name</c> matches the given database ID. Returns <c>null</c>
+        /// if no matching asset is currently loaded.
+        /// </summary>
+        private static Recipe FindRecipeAssetById(string recipeId)
+        {
+#if UNITY_2023_1_OR_NEWER
+            Recipe[] allRecipes = UnityEngine.Object.FindObjectsByType<Recipe>(FindObjectsSortMode.None);
+#else
+            Recipe[] allRecipes = UnityEngine.Object.FindObjectsOfType<Recipe>();
+#endif
+            foreach (Recipe r in allRecipes)
+            {
+                if (r.name == recipeId)
+                    return r;
+            }
+
+            // Also try Resources (recipes may be loaded as assets, not scene objects).
+            Recipe loaded = Resources.Load<Recipe>(recipeId);
+            return loaded;
         }
     }
 }

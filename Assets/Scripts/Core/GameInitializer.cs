@@ -35,10 +35,10 @@ namespace SaborColombiano.Core
 
         private void InitializeEconomy()
         {
-            if (EconomyManager.Instance != null)
+            if (GameManager.Instance != null && GameManager.Instance.Economy != null)
             {
-                EconomyManager.Instance.AddPesos(startingPesos);
-                EconomyManager.Instance.AddEstrellas(startingEstrellas);
+                GameManager.Instance.Economy.AddPesos(startingPesos);
+                GameManager.Instance.Economy.AddEstrellas(startingEstrellas);
             }
         }
 

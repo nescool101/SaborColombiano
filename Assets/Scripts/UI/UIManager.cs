@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SaborColombiano.Core;
+using UInput = UnityEngine.Input;
 
 namespace SaborColombiano.UI
 {
@@ -357,7 +358,7 @@ namespace SaborColombiano.UI
         /// </summary>
         private void HandleAndroidBackButton()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (UInput.GetKeyDown(KeyCode.Escape))
             {
                 if (_panelHistory.Count > 0)
                 {

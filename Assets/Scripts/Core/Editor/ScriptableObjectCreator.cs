@@ -40,23 +40,26 @@ namespace SaborColombiano.Core.Editor
                 if (existing != null)
                 {
                     // Update existing
-                    existing.ingredientName = data.name;
-                    existing.description = data.description;
-                    existing.purchasePrice = data.price;
-                    existing.shelfLife = data.shelfLifeDays;
-                    existing.unlockLevel = data.unlockLevel;
-                    existing.isBasic = data.isBasic;
-                    EditorUtility.SetDirty(existing);
+                    var so = new SerializedObject(existing);
+                    so.FindProperty("ingredientName").stringValue = data.name;
+                    so.FindProperty("description").stringValue = data.description;
+                    so.FindProperty("purchasePrice").intValue = data.price;
+                    so.FindProperty("shelfLife").intValue = data.shelfLifeDays;
+                    so.FindProperty("unlockLevel").intValue = data.unlockLevel;
+                    so.FindProperty("isBasic").boolValue = data.isBasic;
+                    so.ApplyModifiedPropertiesWithoutUndo();
                 }
                 else
                 {
                     var ingredient = ScriptableObject.CreateInstance<Ingredient>();
-                    ingredient.ingredientName = data.name;
-                    ingredient.description = data.description;
-                    ingredient.purchasePrice = data.price;
-                    ingredient.shelfLife = data.shelfLifeDays;
-                    ingredient.unlockLevel = data.unlockLevel;
-                    ingredient.isBasic = data.isBasic;
+                    var so = new SerializedObject(ingredient);
+                    so.FindProperty("ingredientName").stringValue = data.name;
+                    so.FindProperty("description").stringValue = data.description;
+                    so.FindProperty("purchasePrice").intValue = data.price;
+                    so.FindProperty("shelfLife").intValue = data.shelfLifeDays;
+                    so.FindProperty("unlockLevel").intValue = data.unlockLevel;
+                    so.FindProperty("isBasic").boolValue = data.isBasic;
+                    so.ApplyModifiedPropertiesWithoutUndo();
                     AssetDatabase.CreateAsset(ingredient, assetPath);
                 }
             }
@@ -76,25 +79,28 @@ namespace SaborColombiano.Core.Editor
                 var existing = AssetDatabase.LoadAssetAtPath<Recipe>(assetPath);
                 if (existing != null)
                 {
-                    existing.recipeName = data.name;
-                    existing.description = data.description;
-                    existing.cookingTime = data.cookingTime;
-                    existing.sellingPrice = data.sellingPrice;
-                    existing.difficulty = data.difficulty;
-                    existing.unlockLevel = data.unlockLevel;
-                    existing.satisfactionBonus = data.satisfactionBonus;
-                    EditorUtility.SetDirty(existing);
+                    var so = new SerializedObject(existing);
+                    so.FindProperty("recipeName").stringValue = data.name;
+                    so.FindProperty("description").stringValue = data.description;
+                    so.FindProperty("cookingTime").floatValue = data.cookingTime;
+                    so.FindProperty("sellingPrice").intValue = data.sellingPrice;
+                    so.FindProperty("difficulty").intValue = data.difficulty;
+                    so.FindProperty("unlockLevel").intValue = data.unlockLevel;
+                    so.FindProperty("satisfactionBonus").floatValue = data.satisfactionBonus;
+                    so.ApplyModifiedPropertiesWithoutUndo();
                 }
                 else
                 {
                     var recipe = ScriptableObject.CreateInstance<Recipe>();
-                    recipe.recipeName = data.name;
-                    recipe.description = data.description;
-                    recipe.cookingTime = data.cookingTime;
-                    recipe.sellingPrice = data.sellingPrice;
-                    recipe.difficulty = data.difficulty;
-                    recipe.unlockLevel = data.unlockLevel;
-                    recipe.satisfactionBonus = data.satisfactionBonus;
+                    var so = new SerializedObject(recipe);
+                    so.FindProperty("recipeName").stringValue = data.name;
+                    so.FindProperty("description").stringValue = data.description;
+                    so.FindProperty("cookingTime").floatValue = data.cookingTime;
+                    so.FindProperty("sellingPrice").intValue = data.sellingPrice;
+                    so.FindProperty("difficulty").intValue = data.difficulty;
+                    so.FindProperty("unlockLevel").intValue = data.unlockLevel;
+                    so.FindProperty("satisfactionBonus").floatValue = data.satisfactionBonus;
+                    so.ApplyModifiedPropertiesWithoutUndo();
                     AssetDatabase.CreateAsset(recipe, assetPath);
                 }
             }
@@ -114,25 +120,28 @@ namespace SaborColombiano.Core.Editor
                 var existing = AssetDatabase.LoadAssetAtPath<FurnitureData>(assetPath);
                 if (existing != null)
                 {
-                    existing.itemName = data.name;
-                    existing.description = data.description;
-                    existing.purchasePrice = data.price;
-                    existing.gridSize = new Vector2Int(data.gridWidth, data.gridHeight);
-                    existing.unlockLevel = data.unlockLevel;
-                    existing.capacity = data.capacity;
-                    existing.comfortBonus = data.comfortBonus;
-                    EditorUtility.SetDirty(existing);
+                    var so = new SerializedObject(existing);
+                    so.FindProperty("_itemName").stringValue = data.name;
+                    so.FindProperty("_description").stringValue = data.description;
+                    so.FindProperty("_purchasePrice").intValue = data.price;
+                    so.FindProperty("_gridSize").vector2IntValue = new Vector2Int(data.gridWidth, data.gridHeight);
+                    so.FindProperty("_unlockLevel").intValue = data.unlockLevel;
+                    so.FindProperty("_capacity").intValue = data.capacity;
+                    so.FindProperty("_comfortBonus").floatValue = data.comfortBonus;
+                    so.ApplyModifiedPropertiesWithoutUndo();
                 }
                 else
                 {
                     var furniture = ScriptableObject.CreateInstance<FurnitureData>();
-                    furniture.itemName = data.name;
-                    furniture.description = data.description;
-                    furniture.purchasePrice = data.price;
-                    furniture.gridSize = new Vector2Int(data.gridWidth, data.gridHeight);
-                    furniture.unlockLevel = data.unlockLevel;
-                    furniture.capacity = data.capacity;
-                    furniture.comfortBonus = data.comfortBonus;
+                    var so = new SerializedObject(furniture);
+                    so.FindProperty("_itemName").stringValue = data.name;
+                    so.FindProperty("_description").stringValue = data.description;
+                    so.FindProperty("_purchasePrice").intValue = data.price;
+                    so.FindProperty("_gridSize").vector2IntValue = new Vector2Int(data.gridWidth, data.gridHeight);
+                    so.FindProperty("_unlockLevel").intValue = data.unlockLevel;
+                    so.FindProperty("_capacity").intValue = data.capacity;
+                    so.FindProperty("_comfortBonus").floatValue = data.comfortBonus;
+                    so.ApplyModifiedPropertiesWithoutUndo();
                     AssetDatabase.CreateAsset(furniture, assetPath);
                 }
             }

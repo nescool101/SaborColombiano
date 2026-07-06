@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UInput = UnityEngine.Input;
 
 namespace SaborColombiano.Grid
 {
@@ -252,31 +253,31 @@ namespace SaborColombiano.Grid
         private void HandleInput()
         {
             // --- Desktop (mouse) ---
-            if (Input.mousePresent)
+            if (UInput.mousePresent)
             {
                 // Left-click = confirm.
-                if (Input.GetMouseButtonDown(0))
+                if (UInput.GetMouseButtonDown(0))
                 {
                     ConfirmPlacement();
                     return;
                 }
 
                 // Right-click = cancel.
-                if (Input.GetMouseButtonDown(1))
+                if (UInput.GetMouseButtonDown(1))
                 {
                     CancelPlacement();
                     return;
                 }
 
                 // R key = rotate.
-                if (Input.GetKeyDown(KeyCode.R))
+                if (UInput.GetKeyDown(KeyCode.R))
                 {
                     RotateObject();
                     return;
                 }
 
                 // Escape = cancel.
-                if (Input.GetKeyDown(KeyCode.Escape))
+                if (UInput.GetKeyDown(KeyCode.Escape))
                 {
                     CancelPlacement();
                     return;
@@ -284,9 +285,9 @@ namespace SaborColombiano.Grid
             }
 
             // --- Mobile (touch) ---
-            if (Input.touchCount > 0)
+            if (UInput.touchCount > 0)
             {
-                Touch primaryTouch = Input.GetTouch(0);
+                Touch primaryTouch = UInput.GetTouch(0);
 
                 switch (primaryTouch.phase)
                 {
@@ -300,9 +301,9 @@ namespace SaborColombiano.Grid
                 }
 
                 // Two-finger tap = rotate.
-                if (Input.touchCount >= 2)
+                if (UInput.touchCount >= 2)
                 {
-                    Touch secondTouch = Input.GetTouch(1);
+                    Touch secondTouch = UInput.GetTouch(1);
                     if (secondTouch.phase == TouchPhase.Began)
                     {
                         RotateObject();
@@ -350,12 +351,12 @@ namespace SaborColombiano.Grid
         /// </summary>
         private Vector3 GetPointerScreenPosition()
         {
-            if (Input.touchCount > 0)
+            if (UInput.touchCount > 0)
             {
-                return Input.GetTouch(0).position;
+                return UInput.GetTouch(0).position;
             }
 
-            return Input.mousePosition;
+            return UInput.mousePosition;
         }
 
         /// <summary>

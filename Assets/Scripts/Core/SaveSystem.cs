@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using SaborColombiano.Data;
 
 namespace SaborColombiano.Core
 {
@@ -74,7 +75,7 @@ namespace SaborColombiano.Core
             {
                 // Stamp the save time.
                 data.saveTimestamp = DateTime.UtcNow.ToString("o");
-                data.saveVersion = GameData.CurrentSaveVersion;
+                data.version = GameData.CurrentVersion;
 
                 string json = JsonUtility.ToJson(data, prettyPrint: true);
 

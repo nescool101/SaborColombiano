@@ -626,6 +626,29 @@ namespace SaborColombiano.Economy
         }
 
         /// <summary>
+        /// Adds ingredients directly to the inventory without purchasing (e.g. starter items).
+        /// Creates a non-perishable batch.
+        /// </summary>
+        /// <param name="ingredientId">Ingredient identifier.</param>
+        /// <param name="quantity">Number of units to add.</param>
+        public void AddIngredientToInventory(string ingredientId, int quantity)
+        {
+            if (string.IsNullOrEmpty(ingredientId) || quantity <= 0)
+                return;
+
+            int currentDay = GameManager.Instance != null ? GameManager.Instance.CurrentDay : 1;
+            IngredientBatch batch = new IngredientBatch
+            {
+                ingredientId = ingredientId,
+                quantity = quantity,
+                purchaseDay = currentDay,
+                shelfLife = 0 // non-perishable for gifted items
+            };
+            _ingredientBatches.Add(batch);
+            RebuildIngredientStock();
+        }
+
+        /// <summary>
         /// Checks if all ingredients for a recipe from the
         /// <see cref="ColombianRecipeDatabase"/> are available.
         /// </summary>

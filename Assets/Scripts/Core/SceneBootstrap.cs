@@ -143,7 +143,7 @@ namespace SaborColombiano.Core
                 // Auto-save will be triggered by GameManager when it's ready
                 if (GameManager.Instance != null)
                 {
-                    GameManager.Instance.TriggerAutoSave();
+                    GameManager.Instance.RequestSave();
                 }
             }
         }

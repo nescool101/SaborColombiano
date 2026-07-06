@@ -107,9 +107,9 @@ namespace SaborColombiano.AI
         private float CalculateSpawnInterval()
         {
             float reputation = 2.5f; // Default
-            if (RestaurantManager.Instance != null)
+            if (GameManager.Instance != null && GameManager.Instance.Restaurant != null)
             {
-                reputation = RestaurantManager.Instance.Reputation;
+                reputation = GameManager.Instance.Restaurant.Reputation;
             }
 
             // Higher reputation = shorter intervals (more customers)
@@ -126,17 +126,16 @@ namespace SaborColombiano.AI
         {
             if (activeCustomers.Count >= maxActiveCustomers) return false;
 
-            // Check if there are available seats
-            var gridManager = FindAnyObjectByType<GridManager>();
-            if (gridManager != null)
+            // Check if there are available seats based on restaurant capacity
+            if (GameManager.Instance != null && GameManager.Instance.Restaurant != null)
             {
-                int availableSeats = gridManager.GetAvailableSeatCount();
-                if (availableSeats <= 0) return false;
+                int maxSeats = GameManager.Instance.Restaurant.MaxCustomers;
+                if (activeCustomers.Count >= maxSeats) return false;
             }
 
             // Check game state
             if (GameManager.Instance != null &&
-                GameManager.Instance.CurrentState != GameManager.GameState.Playing)
+                GameManager.Instance.CurrentState != GameState.Playing)
             {
                 return false;
             }
@@ -163,13 +162,56 @@ namespace SaborColombiano.AI
                     ? customerSprites[Random.Range(0, customerSprites.Length)]
                     : null;
 
-                customerAI.Initialize(randomName, randomSprite, exitPoint);
+                // Apply visual customisation
+                customerAI.gameObject.name = $"Customer_{randomName}";
+                var sr = customerAI.GetComponent<SpriteRenderer>();
+                if (sr != null && randomSprite != null)
+                    sr.sprite = randomSprite;
+
+                // Determine grid parameters from GridManager
+                var gridManager = FindAnyObjectByType<GridManager>();
+                Vector2Int entrancePos = Vector2Int.zero;
+                Vector2Int exitPos = Vector2Int.zero;
+                float cellSize = 1f;
+                Vector3 gridOrigin = Vector3.zero;
+                bool[,] walkableGrid = null;
+
+                if (gridManager != null)
+                {
+                    cellSize = gridManager.CellSize;
+                    gridOrigin = gridManager.GridOrigin;
+                    walkableGrid = new bool[gridManager.Width, gridManager.Height];
+                    // Build a simple walkable grid (all cells without placed objects are walkable)
+                    for (int x = 0; x < gridManager.Width; x++)
+                    {
+                        for (int y = 0; y < gridManager.Height; y++)
+                        {
+                            walkableGrid[x, y] = gridManager.GetObjectAt(new Vector2Int(x, y)) == null;
+                        }
+                    }
+                    entrancePos = gridManager.WorldToGrid(spawnPos);
+                    if (exitPoint != null)
+                        exitPos = gridManager.WorldToGrid(exitPoint.position);
+                    else
+                        exitPos = entrancePos;
+                }
+
+                customerAI.Initialize(
+                    entrancePos,
+                    exitPos,
+                    walkableGrid,
+                    cellSize,
+                    gridOrigin,
+                    null,  // requestSeat -- to be wired by restaurant system
+                    null,  // getRandomDish -- to be wired by menu system
+                    null   // submitOrder -- to be wired by kitchen system
+                );
                 customerAI.OnCustomerLeft += HandleCustomerLeft;
                 activeCustomers.Add(customerAI);
             }
         }
 
-        private void HandleCustomerLeft(CustomerAI customer)
+        private void HandleCustomerLeft(CustomerAI customer, float tip)
         {
             customer.OnCustomerLeft -= HandleCustomerLeft;
             activeCustomers.Remove(customer);
