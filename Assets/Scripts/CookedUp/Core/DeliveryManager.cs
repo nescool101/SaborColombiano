@@ -132,7 +132,7 @@ namespace CookedUp.Core
                 SuccessfulDeliveriesCount++;
                 SuccessfulDeliveriesValue += recipeRequest.Value;
                 recipeRequest.Complete();
-                Debug.Log($"Recipe {recipeRequest.Recipe.DisplayName} delivered!");
+                Debug.Log($"Receta {recipeRequest.Recipe.DisplayName} entregada!");
                 plate.DestroySelf();
                 OnRecipeDelivered?.Invoke(this, new RecipeDeliveryEvent(recipeRequest, player, deliveryCounter));
                 OnDeliverySuccess?.Invoke(this, new RecipeDeliveryEvent(recipeRequest, player, deliveryCounter));

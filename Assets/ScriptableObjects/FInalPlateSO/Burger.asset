@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3745ce815febecb44be065df33649c37, type: 3}
   m_Name: Burger
   m_EditorClassIdentifier: 
-  displayName: Burger
+  displayName: Arepa con Carne
   ingredients:
   - {fileID: 11400000, guid: 14a6e059590484d42b824d37494de891, type: 2}
   - {fileID: 11400000, guid: 3c9cedeeff88c5e48b4a2ffafbe9b1c5, type: 2}

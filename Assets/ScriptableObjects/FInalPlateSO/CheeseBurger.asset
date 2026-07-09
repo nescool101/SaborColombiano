@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3745ce815febecb44be065df33649c37, type: 3}
   m_Name: CheeseBurger
   m_EditorClassIdentifier: 
-  displayName: Cheese Burger
+  displayName: Arepa con Queso y Carne
   ingredients:
   - {fileID: 11400000, guid: 14a6e059590484d42b824d37494de891, type: 2}
   - {fileID: 11400000, guid: 1f4bbfb68fe17bf4ea4c25ad20cdd4c4, type: 2}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3745ce815febecb44be065df33649c37, type: 3}
   m_Name: MegaBurger
   m_EditorClassIdentifier: 
-  displayName: MEGA Burger
+  displayName: Bandeja Paisa
   ingredients:
   - {fileID: 11400000, guid: 14a6e059590484d42b824d37494de891, type: 2}
   - {fileID: 11400000, guid: 7ff4b0ab93f12ef4bbe3174efce5948a, type: 2}

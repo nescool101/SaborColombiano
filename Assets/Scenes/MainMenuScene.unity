@@ -2972,7 +2972,7 @@ PrefabInstance:
     - target: {fileID: 6923962055942537708, guid: 7feb14df5050a90c1b46fd7d55f4cfd9,
         type: 3}
       propertyPath: m_text
-      value: 'QUIT
+      value: 'SALIR
 
 '
       objectReference: {fileID: 0}
@@ -3921,7 +3921,7 @@ PrefabInstance:
     - target: {fileID: 3178380666525809324, guid: c0a2599ba30010ea29000d7bd7a82807,
         type: 3}
       propertyPath: m_text
-      value: PLAY
+      value: JUGAR
       objectReference: {fileID: 0}
     - target: {fileID: 3178380666525809324, guid: c0a2599ba30010ea29000d7bd7a82807,
         type: 3}

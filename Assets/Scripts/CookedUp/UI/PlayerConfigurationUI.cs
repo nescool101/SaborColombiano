@@ -94,7 +94,7 @@ namespace CookedUp.UI
             if (HasCreatedPlayer) {
                 playerVisual.SetColor(playerConfiguration.Color);
                 
-                playerTypeText.text = playerConfiguration.IsBot ? "Bot" : "Player";
+                playerTypeText.text = playerConfiguration.IsBot ? "Bot" : "Jugador";
             }
             else {
                 playerVisual.SetMaterial(PlayerNotCreatedMaterial);
