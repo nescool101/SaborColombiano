@@ -56,7 +56,7 @@ except IndexError as e:
     exit(1)
 
 
-os.system(f"python sort_input.py {input_file_A} {input_file_B}")
+subprocess.run([sys.executable, "sort_input.py", input_file_A, input_file_B])
 
 
 print("Difference between:")
@@ -73,12 +73,13 @@ print(f"A ({index_file_A}/{length-1}): {input_file_A}")
 print(f"B ({index_file_B}/{length-1}): {input_file_B}")
 # print("created at:", datetime.fromtimestamp(os.path.getctime(input_file_B)).strftime('%Y-%m-%d %H:%M:%S'))
 
-run_command = ' '.join(['git diff --word-diff=color', input_file_A, input_file_B])
+# Argument list (no shell): file names can't inject extra commands.
+run_command = ['git', 'diff', '--word-diff=color', input_file_A, input_file_B]
 
 if interactive:
-    os.system(run_command)
+    subprocess.run(run_command)
 
-proc = subprocess.Popen(run_command, stdout=subprocess.PIPE, shell=True)
+proc = subprocess.Popen(run_command, stdout=subprocess.PIPE)
 (out, err) = proc.communicate()
 print(out.decode('utf-8'))
 print()

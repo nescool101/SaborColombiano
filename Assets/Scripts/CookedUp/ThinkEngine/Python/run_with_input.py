@@ -1,4 +1,5 @@
 import glob
+import shlex
 import os
 import sys
 from datetime import datetime
@@ -149,15 +150,16 @@ if(verbose_level > 1):
         print("\t" + brain_file.removeprefix(streaming_assets_path))
     print()
 
-run_command = ' \\\n\t'.join([solver_path, solver_options, *brain_files, input_file])
+# Argument list (no shell): paths/options can't inject extra commands.
+run_command = [solver_path, *shlex.split(solver_options), *brain_files, input_file]
 if(verbose_level > 2):
     print("command:")
-    print(run_command)
+    print(' \\\n\t'.join(shlex.quote(a) for a in run_command))
     print()
 
 import subprocess
 
-proc = subprocess.Popen(run_command, stdout=subprocess.PIPE, shell=True)
+proc = subprocess.Popen(run_command, stdout=subprocess.PIPE)
 (out, err) = proc.communicate()
 
 if(verbose_level > 0):
